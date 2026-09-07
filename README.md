@@ -41,7 +41,24 @@ Si el Pokémon no existe, el servidor debe responder con código `404`:
 GET /api/pokemon?limit=20
 ```
 
-Devuelve una lista de nombres de Pokémon. El parámetro `limit` controla la cantidad de resultados.
+Devuelve una lista de nombres de Pokémon. El parámetro `limit` es opcional (por defecto `20`, máximo `100`).
+
+Respuesta esperada (`200`):
+
+```json
+{
+  "limit": 20,
+  "pokemon": ["bulbasaur", "ivysaur", "venusaur", "..."]
+}
+```
+
+Si `limit` no es un número entero, o está fuera del rango permitido (1-100), responde `400`:
+
+```json
+{
+  "error": "El parámetro limit debe ser un entero entre 1 y 100."
+}
+```
 
 ### Verificar estado del servidor
 
@@ -50,6 +67,23 @@ GET /api/health
 ```
 
 Sirve para comprobar que el backend está funcionando.
+
+Respuesta esperada (`200`):
+
+```json
+{
+  "status": "ok"
+}
+```
+
+### Códigos de error generales
+
+| Código | Cuándo ocurre | Ejemplo de respuesta |
+|--------|---------------|------------------------|
+| `400` | El parámetro `limit` es inválido o está fuera de rango | `{ "error": "El parámetro limit debe ser un entero entre 1 y 100." }` |
+| `404` | El Pokémon buscado no existe, o la ruta no existe | `{ "error": "No lo encontré" }` |
+| `502` | PokéAPI respondió con un error inesperado | `{ "error": "PokéAPI no pudo procesar la solicitud." }` |
+| `503` | No se pudo conectar con PokéAPI | `{ "error": "No fue posible conectar con PokéAPI." }` |
 
 ## Integrantes y responsabilidades
 
